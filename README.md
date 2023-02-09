@@ -1,2 +1,2 @@
-# book_api
+# Book API
  Simple Book API
