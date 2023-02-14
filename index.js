@@ -27,6 +27,7 @@ let users = [
   {
     uid: 'etienne.kroger',
     name: 'Etienne Kroger',
+    favoriteBooks: ['Life of Pi']
   },
 ];
 
@@ -193,7 +194,33 @@ app.put('/users/:uid/:bookTitle', (req, res) => {
 });
 
 // DELETE requests
+// Delete user's book list
+app.delete('/users/:uid/:bookTitle', (req, res) => {
+  const { uid, bookTitle } = req.params;
 
+  let user = users.find((user) => user.uid == uid);
+
+  if (user) {
+    user.favoriteBooks = user.favoriteBooks.filter( title => title !== bookTitle)
+    res.status(200).send(`${bookTitle} has been deleted from ${uid}'s array`);
+  } else {
+    res.status(400).send('Favorite book not added');
+  }
+});
+
+// Delete user
+app.delete('/users/:uid/', (req, res) => {
+  const { uid } = req.params;
+
+  let user = users.find((user) => user.uid == uid);
+
+  if (user) {
+    users = users.filter( user => user.uid !== uid)
+    res.status(200).send(`${user.uid} has been deleted`);
+  } else {
+    res.status(400).send('No user found');
+  }
+});
 
 
 // Error handler
