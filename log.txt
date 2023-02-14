@@ -1,24 +1,11 @@
-URL: /
-Timestamp: Thu Feb 09 2023 15:01:54 GMT-0500 (Eastern Standard Time)
-
-URL: /favicon.ico
-Timestamp: Thu Feb 09 2023 15:01:55 GMT-0500 (Eastern Standard Time)
-
-URL: /documents
-Timestamp: Thu Feb 09 2023 15:02:05 GMT-0500 (Eastern Standard Time)
-
-URL: /favicon.ico
-Timestamp: Thu Feb 09 2023 15:02:05 GMT-0500 (Eastern Standard Time)
-
-URL: /documents
-Timestamp: Thu Feb 09 2023 15:02:17 GMT-0500 (Eastern Standard Time)
-
-URL: /favicon.ico
-Timestamp: Thu Feb 09 2023 15:02:18 GMT-0500 (Eastern Standard Time)
-
-URL: /documentation
-Timestamp: Thu Feb 09 2023 15:02:28 GMT-0500 (Eastern Standard Time)
-
-URL: /favicon.ico
-Timestamp: Thu Feb 09 2023 15:02:28 GMT-0500 (Eastern Standard Time)
-
+::1 - - [14/Feb/2023:19:58:12 +0000] "GET / HTTP/1.1" 200 24 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+::1 - - [14/Feb/2023:19:58:12 +0000] "GET /favicon.ico HTTP/1.1" 404 150 "http://localhost:8080/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+::1 - - [14/Feb/2023:19:59:07 +0000] "GET /books HTTP/1.1" 200 179 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+::1 - - [14/Feb/2023:20:04:29 +0000] "GET /books HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+::1 - - [14/Feb/2023:20:04:30 +0000] "GET /books HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+::1 - - [14/Feb/2023:20:04:32 +0000] "GET /books HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+::1 - - [14/Feb/2023:20:07:29 +0000] "GET /books HTTP/1.1" 200 671 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+::1 - - [14/Feb/2023:20:07:57 +0000] "GET / HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+::1 - - [14/Feb/2023:20:08:20 +0000] "GET /books HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+::1 - - [14/Feb/2023:20:08:26 +0000] "GET /documentation HTTP/1.1" 404 152 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+::1 - - [14/Feb/2023:20:08:31 +0000] "GET /documentation.html HTTP/1.1" 200 580 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
