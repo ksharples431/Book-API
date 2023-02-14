@@ -3,10 +3,11 @@ const bodyParser = require('body-parser');
       morgan = require('morgan');
       fs = require('fs');
       path = require('path');
-      // methodOverride = require('method-override');
 
+// Initialize express
 const app = express();
 
+// Local data
 let topBooks = [
   {
     title: "Harry Potter and the Sorcerer's Stone",
@@ -58,6 +59,7 @@ const accessLogStream = fs.createWriteStream(
 
 app.use(morgan('combined', { stream: accessLogStream }));
 
+// Serve static files
 app.use(express.static('public'));
 
 // GET requests
@@ -69,6 +71,7 @@ app.get('/books', (req, res) => {
   res.json(topBooks);
 });
 
+// Body parser
 app.use(
   bodyParser.urlencoded({
     extended: true,
@@ -76,14 +79,14 @@ app.use(
 );
 
 app.use(bodyParser.json());
-// app.use(methodOverride());
 
+// Error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
 
-// listen for requests
+// Listen for requests
 app.listen(8080, () => {
   console.log('Your app is listening on port 8080.');
 });
