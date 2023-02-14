@@ -21,6 +21,8 @@ let users = [
   {
     uid: 'ksharples431',
     name: 'Katie Sharples',
+    favoriteBooks: []
+
   },
   {
     uid: 'etienne.kroger',
@@ -86,15 +88,31 @@ app.use(morgan('combined', { stream: accessLogStream }));
 // Serve static files
 app.use(express.static('public'));
 
+// POST/Create requests 
+// Create new user
+app.post('/users', (req, res) => {
+  const newUser = req.body;
+  if (newUser.name) {
+    newUser.uid = uuid.v4();
+    users.push(newUser);
+    res.status(201).json(newUser) 
+  } else {
+    res.status(400).send('User not created')
+  }
+});
+
 // GET/Read requests
+// Get hompage message
 app.get('/', (req, res) => {
   res.send('Welcome to my book club!');
 });
 
+// Get all users
 app.get('/users', (req, res) => {
   res.status(200).json(users);
 });
 
+// Get user by id
 app.get('/users/:uid', (req, res) => {
   // const title = req.params.title;
   const { uid } = req.params;
@@ -106,12 +124,13 @@ app.get('/users/:uid', (req, res) => {
   }
 });
 
+// Get all books
 app.get('/books', (req, res) => {
   res.status(200).json(books);
 });
 
+// Get book by title
 app.get('/books/:title', (req, res) => {
-  // const title = req.params.title;
   const { title } = req.params;
   const book = books.find((book) => book.title === title);
   if (book) {
@@ -121,6 +140,7 @@ app.get('/books/:title', (req, res) => {
   }
 });
 
+// Get genre by name
 app.get('/books/genre/:genreName', (req, res) => {
   const { genreName } = req.params;
   const genre = books.find((book) => book.genre.name === genreName).genre;
@@ -131,6 +151,7 @@ app.get('/books/genre/:genreName', (req, res) => {
   }
 });
 
+// Get author by name
 app.get('/books/author/:authorName', (req, res) => {
   const { authorName } = req.params;
   const author = books.find((book) => book.author.name === authorName).author;
@@ -140,6 +161,40 @@ app.get('/books/author/:authorName', (req, res) => {
     res.status(400).send('Author not found');
   }
 });
+
+// PUT/Update requests
+// Update user's name
+app.put('/users/:uid', (req, res) => {
+  const { uid } = req.params;
+  const updatedUser = req.body;
+
+  let user = users.find(user => user.uid == uid);
+
+  if (user) {
+    user.name = updatedUser.name;
+    res.status(200).json(user)
+  } else {
+    res.status(400).send('User not found');
+  }
+});
+
+// Update user's book list
+app.put('/users/:uid/:bookTitle', (req, res) => {
+  const { uid, bookTitle } = req.params;
+
+  let user = users.find((user) => user.uid == uid);
+
+  if (user) {
+    user.favoriteBooks.push(bookTitle);
+    res.status(200).send(`${bookTitle} has been added to ${uid}'s array`);
+  } else {
+    res.status(400).send('Favorite book not added');
+  }
+});
+
+// DELETE requests
+
+
 
 // Error handler
 app.use((err, req, res, next) => {
