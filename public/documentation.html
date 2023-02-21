@@ -10,11 +10,150 @@
   </head>
   <body>
     <h1>My Books API: Documentation</h1>
+    <h2>About this API</h2>
     <p>
-      This API will provide users with access to information about
-      different books, authors, and genres. Users will be able to sign-up,
-      update their personal information, and create a list of their
-      favorite books.
+      A simple API that provides users with information about books,
+      authors, and genres.
     </p>
+    <h2>The Api's features include</h2>
+    <div>
+      <ul>
+        <li>A returned list of all books</li>
+        <li>
+          Returned data about any single book including description,
+          author, genre
+        </li>
+        <li>Returned data about a specific author</li>
+        <li>Returned data about a specific genre</li>
+        <li>Allows new users to register</li>
+        <li>Allows users to update thier user info</li>
+        <li>Allows users to add a book to a list of their favorites</li>
+        <li>Allows users to remove a book from a favorites list</li>
+        <li>Allows existing users to deregister</li>
+        <li>Allows users to see a whole series of books</li>
+        <li>
+          Allows users to create a "To Read" list in addition to their
+          "Favorite Books" list
+        </li>
+      </ul>
+    </div>
+    <div>
+      <h2>Endpoints</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Business Logic</th>
+            <th>URL</th>
+            <th>HTTP Method</th>
+            <th>Query Parameters</th>
+            <th>Request Body Data Format</th>
+            <th>Response Body Data Format</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>Returns a list of all books</td>
+            <td>/books</td>
+            <td>Find</td>
+            <td>-</td>
+            <td>-</td>
+            <td>A JSON object holding data about all the books</td>
+          </tr>
+
+          <tr>
+            <td>Returns data about single book by title</td>
+            <td>/books/:title</td>
+            <td>GET</td>
+            <td>:title</td>
+            <td>-</td>
+            <td>A JSON object holding data about a single book</td>
+          </tr>
+
+          <tr>
+            <td>Returns data about a genre by title</td>
+            <td>/books/genre/:name</td>
+            <td>GET</td>
+            <td>:genreName</td>
+            <td>-</td>
+            <td>
+              A JSON object holding data about a specific genre of book
+            </td>
+          </tr>
+
+          <tr>
+            <td>Returns data about a author by name</td>
+            <td>/books/author/:name</td>
+            <td>GET</td>
+            <td>:authorName</td>
+            <td>-</td>
+            <td>A JSON object holding data about a specific author</td>
+          </tr>
+
+          <tr>
+            <td>Allows new users to register</td>
+            <td>/users</td>
+            <td>POST</td>
+            <td>-</td>
+            <td>
+              A JSON object holding data about the user to add, structured
+              like: { Username: req.body.Username, Password:
+              req.body.Password, Email: req.body.Email, Birthday:
+              req.body.Birthday }
+            </td>
+            <td>
+              A JSON object holding data about the user that was added
+            </td>
+          </tr>
+
+          <tr>
+            <td>Allows users to update their user info</td>
+            <td>/users/:id</td>
+            <td>PUT</td>
+            <td>:id</td>
+            <td>-</td>
+            <td>
+              A JSON object holding data about the updated user information
+            </td>
+          </tr>
+
+          <tr>
+            <td>Allows users to add a book to their favorites</td>
+            <td>/users/:id/:bookTitle</td>
+            <td>POST</td>
+            <td>:id, :bookTitle</td>
+            <td>-</td>
+            <td>
+              A JSON object holding data about the user and the book that
+              was added
+            </td>
+          </tr>
+
+          <tr>
+            <td>Allows users to remove a book from their favorites</td>
+            <td>/users/:id/:bookTitle</td>
+            <td>DELETE</td>
+            <td>:id, :bookTitle</td>
+            <td>-</td>
+            <td>
+              A JSON object holding data about the user and the book that
+              was removed
+            </td>
+          </tr>
+
+          <tr>
+            <td>Allows existing users to deregister</td>
+            <td>/users/:id</td>
+            <td>DELETE</td>
+            <td>:id</td>
+            <td>-</td>
+            <td>
+              A text message indicating whether the user has successfully
+              deregistered
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </body>
 </html>
