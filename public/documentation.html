@@ -63,16 +63,16 @@
 
           <tr>
             <td>Returns data about a single book by title</td>
-            <td>/books/:title</td>
+            <td>/books/:Title</td>
             <td>GET</td>
-            <td>:title</td>
+            <td>:Title</td>
             <td>-</td>
             <td>A JSON object holding data about a single book</td>
           </tr>
 
           <tr>
             <td>Returns data about an author by author name</td>
-            <td>/books/author/:name</td>
+            <td>/books/authors/:authorName</td>
             <td>GET</td>
             <td>:authorName</td>
             <td>-</td>
@@ -81,7 +81,7 @@
 
           <tr>
             <td>Returns data about a genre by genre name</td>
-            <td>/books/genre/:name</td>
+            <td>/books/genres/:genreName</td>
             <td>GET</td>
             <td>:genreName</td>
             <td>-</td>
@@ -110,7 +110,7 @@
             <td>Allows users to update their user info</td>
             <td>/users/:Username</td>
             <td>PUT</td>
-            <td>:id</td>
+            <td>:Username</td>
             <td>-</td>
             <td>
               A JSON object holding data about the updated user information
@@ -119,9 +119,9 @@
 
           <tr>
             <td>Allows users to add a book to their favorites</td>
-            <td>/users/:id/:bookTitle</td>
+            <td>/users/:Username/books/:BookID</td>
             <td>POST</td>
-            <td>:id, :bookTitle</td>
+            <td>:Username, :BookID</td>
             <td>-</td>
             <td>
               A JSON object holding data about the user and the book that
@@ -131,9 +131,9 @@
 
           <tr>
             <td>Allows users to remove a book from their favorites</td>
-            <td>/users/:id/:bookTitle</td>
+            <td>/users/:Username/books/:BookID</td>
             <td>DELETE</td>
-            <td>:id, :bookTitle</td>
+            <td>:Username, :BookID</td>
             <td>-</td>
             <td>
               A JSON object holding data about the user and the book that
@@ -143,9 +143,9 @@
 
           <tr>
             <td>Allows existing users to deregister</td>
-            <td>/users/:id</td>
+            <td>/users/:Username</td>
             <td>DELETE</td>
-            <td>:id</td>
+            <td>:Username</td>
             <td>-</td>
             <td>
               A text message indicating whether the user has successfully

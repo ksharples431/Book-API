@@ -150,7 +150,7 @@ app.put('/users/:Username', (req, res) => {
       if (!user) {
         return res.status(400).send(req.body.Username + " doesn't exist");
       } else {
-        res.json(user);
+        res.status(200).json(user);
       }
     })
     .catch((err) => {
@@ -169,7 +169,7 @@ app.post('/users/:Username/books/:BookID', (req, res) => {
     { new: true }
   )
     .then((updatedUser) => {
-      res.json(updatedUser);
+      res.status(200).json(updatedUser);
     })
     .catch((err) => {
       console.error(err);
@@ -185,7 +185,7 @@ app.delete('/users/:Username/books/:BookID', (req, res) => {
     { new: true }
   )
     .then((updatedUser) => {
-      res.json(updatedUser);
+      res.status(200).json(updatedUser);
     })
     .catch((err) => {
       console.error(err);
@@ -213,7 +213,7 @@ app.delete('/users/:Username', (req, res) => {
 app.get('/users', (req, res) => {
   Users.find()
     .then((users) => {
-      res.status(201).json(users);
+      res.status(200).json(users);
     })
     .catch((err) => {
       console.error(err);
@@ -225,7 +225,7 @@ app.get('/users', (req, res) => {
 app.get('/users/:Username', (req, res) => {
   Users.findOne({ Username: req.params.Username })
     .then((user) => {
-      res.json(user);
+      res.status(200).json(user);
     })
     .catch((err) => {
       console.error(err);
