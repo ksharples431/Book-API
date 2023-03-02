@@ -101,3 +101,5 @@
 ::1 - - [02/Mar/2023:18:46:11 +0000] "POST /users/ksharples431/books/63f66e138f8acf5541b5ed9d HTTP/1.1" 200 4 "-" "PostmanRuntime/7.30.1"
 ::1 - - [02/Mar/2023:18:50:21 +0000] "POST /users/csharples431/books/63f66f828f8acf5541b5eda6 HTTP/1.1" 200 163 "-" "PostmanRuntime/7.30.1"
 ::1 - - [02/Mar/2023:18:53:57 +0000] "DELETE /users/csharples431 HTTP/1.1" 200 25 "-" "PostmanRuntime/7.30.1"
+::1 - - [02/Mar/2023:19:20:59 +0000] "GET / HTTP/1.1" 200 24 "-" "PostmanRuntime/7.30.1"
+::1 - - [02/Mar/2023:19:28:33 +0000] "GET /books HTTP/1.1" 200 2945 "-" "PostmanRuntime/7.30.1"

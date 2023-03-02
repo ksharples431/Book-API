@@ -84,12 +84,6 @@ app.post('/users/:Username/books/:BookID', (req, res) => {
     });
 });
 
-// GET/Read requests
-// Get hompage message
-app.get('/', (req, res) => {
-  res.send('Welcome to my book club!');
-});
-
 // Get all users
 app.get('/users', (req, res) => {
   Users.find()
@@ -128,7 +122,12 @@ app.get('/users/:Username', (req, res) => {
 
 // Get all books
 app.get('/books', (req, res) => {
-  res.status(200).json(books);
+  Books.find().then((books) => {
+    res.json(books);
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).send('Error: ' + err)
+  })
 });
 
 // Get book by title
