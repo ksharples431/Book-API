@@ -13,7 +13,6 @@ let bookSchema = mongoose.Schema({
     Name: String,
     Bio: String,
   },
-  Actors: [String],
   ImagePath: String,
   haveRead: Boolean,
   owned: Boolean,

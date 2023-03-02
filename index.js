@@ -4,79 +4,22 @@ morgan = require('morgan');
 fs = require('fs');
 path = require('path');
 uuid = require('uuid');
+mongoose = require('mongoose');
+Models = require('./models.js');
+
+const Books = Models.Book;
+const Users = Models.User;
 
 // Initialize express
 const app = express();
 
 // Body parser
+app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
     extended: true,
   })
 );
-app.use(bodyParser.json());
-
-// Local data
-let users = [
-  {
-    uid: 'ksharples431',
-    name: 'Katie Sharples',
-    favoriteBooks: []
-
-  },
-  {
-    uid: 'etienne.kroger',
-    name: 'Etienne Kroger',
-    favoriteBooks: ['Life of Pi']
-  },
-];
-
-let books = [
-  {
-    title: "Harry Potter and the Sorcerer's Stone",
-    author: { name: 'J.K. Rowling' },
-    genre: {
-      name: 'Fantasy',
-      description: 'Strange new worlds',
-    },
-  },
-  {
-    title: 'Lord of the Rings',
-    author: { name: 'J.R.R. Tolkien'}
-  },
-  {
-    title: 'Harry Potter and the Chamber of Secrets',
-    author: {name: 'J.K. Rowling'}
-  },
-  {
-    title: 'Harry Potter and the Prisoner of Azkaban',
-    author: { name: 'J.K. Rowling'}
-  },
-  {
-    title: 'Harry Potter and the Goblet of Fire',
-    author: { name: 'J.K. Rowling'}
-  },
-  {
-    title: 'Harry Potter and the Order of the Phoenix',
-    author: { name: 'J.K. Rowling'}
-  },
-  {
-    title: 'Harry Potter and the Half-Blood Prince',
-    author: { name: 'J.K. Rowling'}
-  },
-  {
-    title: 'Harry Potter and the Deathly Hallows',
-    author: { name: 'J.K. Rowling'}
-  },
-  {
-    title: 'The Stand',
-    author: { name: 'Stephen King'}
-  },
-  {
-    title: 'Misery',
-    author: { name: 'Stephen King'}
-  },
-];
 
 // Logger middleware
 const accessLogStream = fs.createWriteStream(
@@ -89,17 +32,56 @@ app.use(morgan('combined', { stream: accessLogStream }));
 // Serve static files
 app.use(express.static('public'));
 
-// POST/Create requests 
+mongoose.connect('mongodb://127.0.0.1/myBooksDB', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+mongoose.set('strictQuery', false);
+
 // Create new user
 app.post('/users', (req, res) => {
-  const newUser = req.body;
-  if (newUser.name) {
-    newUser.uid = uuid.v4();
-    users.push(newUser);
-    res.status(201).json(newUser) 
-  } else {
-    res.status(400).send('User not created')
-  }
+  Users.findOne({ Username: req.body.Username })
+    .then((user) => {
+      if (user) {
+        return res.status(400).send(req.body.Username + 'already exists');
+      } else {
+        Users.create({
+          Username: req.body.Username,
+          Password: req.body.Password,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday,
+        })
+          .then((user) => {
+            res.status(201).json(user);
+          })
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+          });
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send('Error: ' + error);
+    });
+});
+
+// Post new book to favorites
+app.post('/users/:Username/books/:BookID', (req, res) => {
+  Users.findOneAndUpdate(
+    { Username: req.params.Username },
+    {
+      $push: { Favorites: req.params.BookID },
+    },
+    { new: true }
+  )
+    .then((updatedUser) => {
+      res.json(updatedUser);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 // GET/Read requests
@@ -110,19 +92,38 @@ app.get('/', (req, res) => {
 
 // Get all users
 app.get('/users', (req, res) => {
-  res.status(200).json(users);
+  Users.find()
+    .then((users) => {
+      res.status(201).json(users);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 // Get user by id
-app.get('/users/:uid', (req, res) => {
-  // const title = req.params.title;
-  const { uid } = req.params;
-  const user = users.find((user) => user.uid === uid);
-  if (user) {
-    res.status(200).json(user);
-  } else {
-    res.status(400).send('User not found');
-  }
+// app.get('/users/:uid', (req, res) => {
+//   // const title = req.params.title;
+//   const { uid } = req.params;
+//   const user = users.find((user) => user.uid === uid);
+//   if (user) {
+//     res.status(200).json(user);
+//   } else {
+//     res.status(400).send('User not found');
+//   }
+// });
+
+// Get user by username
+app.get('/users/:Username', (req, res) => {
+  Users.findOne({ Username: req.params.Username })
+    .then((user) => {
+      res.json(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 // Get all books
@@ -155,7 +156,9 @@ app.get('/books/genre/:genreName', (req, res) => {
 // Get author by name
 app.get('/books/author/:authorName', (req, res) => {
   const { authorName } = req.params;
-  const author = books.find((book) => book.author.name === authorName).author;
+  const author = books.find(
+    (book) => book.author.name === authorName
+  ).author;
   if (author) {
     res.status(200).json(author);
   } else {
@@ -164,64 +167,100 @@ app.get('/books/author/:authorName', (req, res) => {
 });
 
 // PUT/Update requests
-// Update user's name
-app.put('/users/:uid', (req, res) => {
-  const { uid } = req.params;
-  const updatedUser = req.body;
+// Update user's info by username
+// app.put('/users/:Username', (req, res) => {
+//   Users.findOneAndUpdate(
+//     { Username: req.params.Username },
+//     {
+//       $set: {
+//         Username: req.body.Username,
+//         Password: req.body.Password,
+//         Email: req.body.Email,
+//         Birthday: req.body.Birthday,
+//       },
+//     },
+//     { new: true }, // This line makes sure that the updated document is returned
+//     (err, updatedUser) => {
+//       if (err) {
+//         console.error(err);
+//         res.status(500).send('Error: ' + err);
+//       } else {
+//         res.json(updatedUser);
+//       }
+//     }
+//   );
+// });
 
-  let user = users.find(user => user.uid == uid);
-
-  if (user) {
-    user.name = updatedUser.name;
-    res.status(200).json(user)
-  } else {
-    res.status(400).send('User not found');
-  }
+app.put('/users/:Username', (req, res) => {
+  Users.findOneAndUpdate(
+    { Username: req.params.Username },
+    {
+      $set: {
+        Username: req.body.Username,
+        Password: req.body.Password,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday,
+      },
+    },
+    { new: true }
+  )
+    .then((user) => {
+      res.json(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 // Update user's book list
-app.put('/users/:uid/:bookTitle', (req, res) => {
-  const { uid, bookTitle } = req.params;
+// app.put('/users/:uid/:bookTitle', (req, res) => {
+//   const { uid, bookTitle } = req.params;
 
-  let user = users.find((user) => user.uid == uid);
+//   let user = users.find((user) => user.uid == uid);
 
-  if (user) {
-    user.favoriteBooks.push(bookTitle);
-    res.status(200).send(`${bookTitle} has been added to ${uid}'s array`);
-  } else {
-    res.status(400).send('Favorite book not added');
-  }
-});
+//   if (user) {
+//     user.favoriteBooks.push(bookTitle);
+//     res.status(200).send(`${bookTitle} has been added to ${uid}'s array`);
+//   } else {
+//     res.status(400).send('Favorite book not added');
+//   }
+// });
 
 // DELETE requests
-// Delete user's book list
+// Delete user's book from favorites list
 app.delete('/users/:uid/:bookTitle', (req, res) => {
   const { uid, bookTitle } = req.params;
 
   let user = users.find((user) => user.uid == uid);
 
   if (user) {
-    user.favoriteBooks = user.favoriteBooks.filter( title => title !== bookTitle)
-    res.status(200).send(`${bookTitle} has been deleted from ${uid}'s array`);
+    user.favoriteBooks = user.favoriteBooks.filter(
+      (title) => title !== bookTitle
+    );
+    res
+      .status(200)
+      .send(`${bookTitle} has been deleted from ${uid}'s array`);
   } else {
     res.status(400).send('Favorite book not added');
   }
 });
 
-// Delete user
-app.delete('/users/:uid/', (req, res) => {
-  const { uid } = req.params;
-
-  let user = users.find((user) => user.uid == uid);
-
-  if (user) {
-    users = users.filter( user => user.uid !== uid)
-    res.status(200).send(`${user.uid} has been deleted`);
-  } else {
-    res.status(400).send('No user found');
-  }
+// Delete user by username
+app.delete('/users/:Username', (req, res) => {
+  Users.findOneAndRemove({ Username: req.params.Username })
+    .then((user) => {
+      if (!user) {
+        res.status(400).send(req.params.Username + ' was not found');
+      } else {
+        res.status(200).send(req.params.Username + ' was deleted.');
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
-
 
 // Error handler
 app.use((err, req, res, next) => {
