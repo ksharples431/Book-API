@@ -128,6 +128,42 @@ app.post('/users', (req, res) => {
     });
 });
 
+// Update user info by username
+app.put('/users/:Username', (req, res) => {
+  Users.findOneAndUpdate(
+    { Username: req.params.Username },
+    {
+      $set: {
+        Username: req.body.Username,
+        Password: req.body.Password,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday,
+      },
+    },
+    { new: true }
+  )
+    .then((user) => {
+      if (!user) {
+        return res.status(400).send(req.body.Username + " doesn't exist");
+      } else {
+        res.json(user);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+
+
+
+
+
+
+
+
+
 // Post new book to favorites
 app.post('/users/:Username/books/:BookID', (req, res) => {
   Users.findOneAndUpdate(

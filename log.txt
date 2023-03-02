@@ -126,3 +126,6 @@
 ::1 - - [02/Mar/2023:20:19:04 +0000] "GET /books/genres/Fantasy HTTP/1.1" 400 37 "-" "PostmanRuntime/7.30.1"
 ::1 - - [02/Mar/2023:20:19:19 +0000] "GET /books/genres/Science%20Fiction HTTP/1.1" 400 45 "-" "PostmanRuntime/7.30.1"
 ::1 - - [02/Mar/2023:20:19:55 +0000] "GET /books/genres/Science%20fiction HTTP/1.1" 200 62 "-" "PostmanRuntime/7.30.1"
+::1 - - [02/Mar/2023:20:25:29 +0000] "GET /users/ksharples431 HTTP/1.1" 200 4 "-" "PostmanRuntime/7.30.1"
+::1 - - [02/Mar/2023:20:25:44 +0000] "PUT /users/ksharples431 HTTP/1.1" 400 21 "-" "PostmanRuntime/7.30.1"
+::1 - - [02/Mar/2023:20:26:15 +0000] "PUT /users/ksharples431 HTTP/1.1" 400 26 "-" "PostmanRuntime/7.30.1"
