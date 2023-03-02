@@ -55,7 +55,43 @@ app.get('/books/:Title', (req, res) => {
       if (book) {
         res.status(200).json(book);
       } else {
-        return res.status(400).send(req.params.Title + ' doesn\'t exist in the database');
+        return res.status(400).send(req.params.Title + " doesn't exist in the database");
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+// Get author by name
+app.get('/books/authors/:authorName', (req, res) => {
+  Books.findOne({ 'Author.Name': req.params.authorName })
+    .then((book) => {
+      if (book) {
+        res.status(200).json(book.Author);
+      } else {
+        return res
+          .status(400)
+          .send(req.params.authorName + " doesn't exist in the database");
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+// Get genre by name
+app.get('/books/genres/:genreName', (req, res) => {
+  Books.findOne({ 'Genre.Name': req.params.genreName })
+    .then((book) => {
+      if (book) {
+        res.status(200).json(book.Genre);
+      } else {
+        return res
+          .status(400)
+          .send(req.params.genreName + " doesn't exist in the database");
       }
     })
     .catch((err) => {
@@ -144,30 +180,6 @@ app.get('/users/:Username', (req, res) => {
       console.error(err);
       res.status(500).send('Error: ' + err);
     });
-});
-
-// Get genre by name
-app.get('/books/genre/:genreName', (req, res) => {
-  const { genreName } = req.params;
-  const genre = books.find((book) => book.genre.name === genreName).genre;
-  if (genre) {
-    res.status(200).json(genre);
-  } else {
-    res.status(400).send('Genre not found');
-  }
-});
-
-// Get author by name
-app.get('/books/author/:authorName', (req, res) => {
-  const { authorName } = req.params;
-  const author = books.find(
-    (book) => book.author.name === authorName
-  ).author;
-  if (author) {
-    res.status(200).json(author);
-  } else {
-    res.status(400).send('Author not found');
-  }
 });
 
 // PUT/Update requests

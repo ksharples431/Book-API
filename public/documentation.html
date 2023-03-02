@@ -62,7 +62,7 @@
           </tr>
 
           <tr>
-            <td>Returns data about single book by title</td>
+            <td>Returns data about a single book by title</td>
             <td>/books/:title</td>
             <td>GET</td>
             <td>:title</td>
@@ -71,7 +71,16 @@
           </tr>
 
           <tr>
-            <td>Returns data about a genre by title</td>
+            <td>Returns data about an author by author name</td>
+            <td>/books/author/:name</td>
+            <td>GET</td>
+            <td>:authorName</td>
+            <td>-</td>
+            <td>A JSON object holding data about a specific author</td>
+          </tr>
+
+          <tr>
+            <td>Returns data about a genre by genre name</td>
             <td>/books/genre/:name</td>
             <td>GET</td>
             <td>:genreName</td>
@@ -79,15 +88,6 @@
             <td>
               A JSON object holding data about a specific genre of book
             </td>
-          </tr>
-
-          <tr>
-            <td>Returns data about a author by name</td>
-            <td>/books/author/:name</td>
-            <td>GET</td>
-            <td>:authorName</td>
-            <td>-</td>
-            <td>A JSON object holding data about a specific author</td>
           </tr>
 
           <tr>
