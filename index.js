@@ -38,6 +38,32 @@ mongoose.connect('mongodb://127.0.0.1/myBooksDB', {
 });
 mongoose.set('strictQuery', false);
 
+// Get all books
+app.get('/books', (req, res) => {
+  Books.find().then((books) => {
+    res.json(books);
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).send('Error: ' + err)
+  })
+});
+
+// Get book by title
+app.get('/books/:Title', (req, res) => {
+  Books.findOne({ Title: req.params.Title })
+    .then((book) => {
+      if (book) {
+        res.status(200).json(book);
+      } else {
+        return res.status(400).send(req.params.Title + ' doesn\'t exist in the database');
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
 // Create new user
 app.post('/users', (req, res) => {
   Users.findOne({ Username: req.body.Username })
@@ -118,27 +144,6 @@ app.get('/users/:Username', (req, res) => {
       console.error(err);
       res.status(500).send('Error: ' + err);
     });
-});
-
-// Get all books
-app.get('/books', (req, res) => {
-  Books.find().then((books) => {
-    res.json(books);
-  }).catch((err) => {
-    console.log(err);
-    res.status(500).send('Error: ' + err)
-  })
-});
-
-// Get book by title
-app.get('/books/:title', (req, res) => {
-  const { title } = req.params;
-  const book = books.find((book) => book.title === title);
-  if (book) {
-    res.status(200).json(book);
-  } else {
-    res.status(400).send('Book not found');
-  }
 });
 
 // Get genre by name
