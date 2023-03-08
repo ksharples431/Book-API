@@ -1,11 +1,11 @@
-const bodyParser = require('body-parser');
-express = require('express');
-morgan = require('morgan');
-fs = require('fs');
-path = require('path');
-uuid = require('uuid');
-mongoose = require('mongoose');
-Models = require('./models.js');
+const bodyParser = require('body-parser'),
+  express = require('express'),
+  morgan = require('morgan'),
+  fs = require('fs'),
+  path = require('path'),
+  uuid = require('uuid'),
+  mongoose = require('mongoose'),
+  Models = require('./models.js');
 
 const Books = Models.Book;
 const Users = Models.User;
@@ -20,6 +20,11 @@ app.use(
     extended: true,
   })
 );
+
+// Auth
+let auth = require('./auth')(app);
+const passport = require('passport');
+require('./passport');
 
 // Logger middleware
 const accessLogStream = fs.createWriteStream(
@@ -147,11 +152,7 @@ app.put('/users/:Username', (req, res) => {
     { new: true }
   )
     .then((user) => {
-      if (!user) {
-        return res.status(400).send(req.body.Username + " doesn't exist");
-      } else {
-        res.status(200).json(user);
-      }
+      res.status(200).json(user);
     })
     .catch((err) => {
       console.error(err);
