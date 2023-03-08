@@ -183,3 +183,6 @@
 ::1 - - [08/Mar/2023:20:13:37 +0000] "DELETE /users/ksharples431 HTTP/1.1" 200 25 "-" "PostmanRuntime/7.31.0"
 ::1 - - [08/Mar/2023:20:13:40 +0000] "GET /users HTTP/1.1" 401 - "-" "PostmanRuntime/7.31.0"
 ::1 - - [08/Mar/2023:20:14:01 +0000] "POST /users HTTP/1.1" 201 186 "-" "PostmanRuntime/7.31.0"
+::1 - - [08/Mar/2023:20:24:21 +0000] "PUT /users/ksharples431 HTTP/1.1" 401 - "-" "PostmanRuntime/7.31.0"
+::1 - - [08/Mar/2023:20:27:16 +0000] "PUT /users/ksharples431 HTTP/1.1" 422 90 "-" "PostmanRuntime/7.31.0"
+::1 - - [08/Mar/2023:20:27:50 +0000] "PUT /users/ksharples431 HTTP/1.1" 200 186 "-" "PostmanRuntime/7.31.0"
