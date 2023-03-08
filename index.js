@@ -31,7 +31,6 @@ const accessLogStream = fs.createWriteStream(
   path.join(__dirname, 'log.txt'),
   { flags: 'a' }
 );
-
 app.use(morgan('combined', { stream: accessLogStream }));
 
 // Serve static files
@@ -43,71 +42,90 @@ mongoose.connect('mongodb://127.0.0.1/myBooksDB', {
 });
 mongoose.set('strictQuery', false);
 
+// API endpoints
 // Get all books
-app.get('/books', (req, res) => {
-  Books.find()
-    .then((books) => {
-      res.json(books);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send('Error: ' + err);
-    });
-});
+app.get(
+  '/books',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Books.find()
+      .then((books) => {
+        res.json(books);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).send('Error: ' + err);
+      });
+  }
+);
 
 // Get book by title
-app.get('/books/:Title', (req, res) => {
-  Books.findOne({ Title: req.params.Title })
-    .then((book) => {
-      if (book) {
-        res.status(200).json(book);
-      } else {
-        return res
-          .status(400)
-          .send(req.params.Title + " doesn't exist in the database");
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
-});
+app.get(
+  '/books/:Title',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Books.findOne({ Title: req.params.Title })
+      .then((book) => {
+        if (book) {
+          res.status(200).json(book);
+        } else {
+          return res
+            .status(400)
+            .send(req.params.Title + " doesn't exist in the database");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  }
+);
 
 // Get author by name
-app.get('/books/authors/:authorName', (req, res) => {
-  Books.findOne({ 'Author.Name': req.params.authorName })
-    .then((book) => {
-      if (book) {
-        res.status(200).json(book.Author);
-      } else {
-        return res
-          .status(400)
-          .send(req.params.authorName + " doesn't exist in the database");
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
-});
+app.get(
+  '/books/authors/:authorName',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Books.findOne({ 'Author.Name': req.params.authorName })
+      .then((book) => {
+        if (book) {
+          res.status(200).json(book.Author);
+        } else {
+          return res
+            .status(400)
+            .send(
+              req.params.authorName + " doesn't exist in the database"
+            );
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  }
+);
 
 // Get genre by name
-app.get('/books/genres/:genreName', (req, res) => {
-  Books.findOne({ 'Genre.Name': req.params.genreName })
-    .then((book) => {
-      if (book) {
-        res.status(200).json(book.Genre);
-      } else {
-        return res
-          .status(400)
-          .send(req.params.genreName + " doesn't exist in the database");
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
-});
+app.get(
+  '/books/genres/:genreName',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Books.findOne({ 'Genre.Name': req.params.genreName })
+      .then((book) => {
+        if (book) {
+          res.status(200).json(book.Genre);
+        } else {
+          return res
+            .status(400)
+            .send(req.params.genreName + " doesn't exist in the database");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  }
+);
 
 // Create new user
 app.post('/users', (req, res) => {
@@ -138,101 +156,125 @@ app.post('/users', (req, res) => {
 });
 
 // Update user info by username
-app.put('/users/:Username', (req, res) => {
-  Users.findOneAndUpdate(
-    { Username: req.params.Username },
-    {
-      $set: {
-        Username: req.body.Username,
-        Password: req.body.Password,
-        Email: req.body.Email,
-        Birthday: req.body.Birthday,
+app.put(
+  '/users/:Username',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Users.findOneAndUpdate(
+      { Username: req.params.Username },
+      {
+        $set: {
+          Username: req.body.Username,
+          Password: req.body.Password,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday,
+        },
       },
-    },
-    { new: true }
-  )
-    .then((user) => {
-      res.status(200).json(user);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
-});
+      { new: true }
+    )
+      .then((user) => {
+        res.status(200).json(user);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  }
+);
 
 // Post new book to favorites
-app.post('/users/:Username/books/:BookID', (req, res) => {
-  Users.findOneAndUpdate(
-    { Username: req.params.Username },
-    {
-      $push: { Favorites: req.params.BookID },
-    },
-    { new: true }
-  )
-    .then((updatedUser) => {
-      res.status(200).json(updatedUser);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
-});
+app.post(
+  '/users/:Username/books/:BookID',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Users.findOneAndUpdate(
+      { Username: req.params.Username },
+      {
+        $push: { Favorites: req.params.BookID },
+      },
+      { new: true }
+    )
+      .then((updatedUser) => {
+        res.status(200).json(updatedUser);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  }
+);
 
 // Delete user's book from favorites list
-app.delete('/users/:Username/books/:BookID', (req, res) => {
-  Users.findOneAndUpdate(
-    { Username: req.params.Username },
-    { $pull: { Favorites: req.params.BookID } },
-    { new: true }
-  )
-    .then((updatedUser) => {
-      res.status(200).json(updatedUser);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
-});
+app.delete(
+  '/users/:Username/books/:BookID',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Users.findOneAndUpdate(
+      { Username: req.params.Username },
+      { $pull: { Favorites: req.params.BookID } },
+      { new: true }
+    )
+      .then((updatedUser) => {
+        res.status(200).json(updatedUser);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  }
+);
 
 // Delete user by username
-app.delete('/users/:Username', (req, res) => {
-  Users.findOneAndRemove({ Username: req.params.Username })
-    .then((user) => {
-      if (!user) {
-        res.status(400).send(req.params.Username + ' was not found');
-      } else {
-        res.status(200).send(req.params.Username + ' was deleted.');
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
-});
+app.delete(
+  '/users/:Username',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Users.findOneAndRemove({ Username: req.params.Username })
+      .then((user) => {
+        if (!user) {
+          res.status(400).send(req.params.Username + ' was not found');
+        } else {
+          res.status(200).send(req.params.Username + ' was deleted.');
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  }
+);
 
 // Get all users
-app.get('/users', (req, res) => {
-  Users.find()
-    .then((users) => {
-      res.status(200).json(users);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
-});
+app.get(
+  '/users',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Users.find()
+      .then((users) => {
+        res.status(200).json(users);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  }
+);
 
 // Get user by username
-app.get('/users/:Username', (req, res) => {
-  Users.findOne({ Username: req.params.Username })
-    .then((user) => {
-      res.status(200).json(user);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
-});
+app.get(
+  '/users/:Username',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Users.findOne({ Username: req.params.Username })
+      .then((user) => {
+        res.status(200).json(user);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  }
+);
 
 // Error handler
 app.use((err, req, res, next) => {

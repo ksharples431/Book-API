@@ -4,10 +4,10 @@ const passport = require('passport'),
   passportJWT = require('passport-jwt');
 
 let Users = Models.User,
-  JWRStrategy = passportJWT.Strategy,
-  ExtractJWT = passportJWT.ExtractJWT;
+  JWTStrategy = passportJWT.Strategy,
+  ExtractJWT = passportJWT.ExtractJwt;
 
-passsport.use(
+passport.use(
   new LocalStrategy(
     {
       usernameField: 'Username',
@@ -39,7 +39,7 @@ passport.use(
   new JWTStrategy(
     {
       jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-      secretOrKey: 'isthereanybodygoingtolistentomystory',
+      secretOrKey: 'your_jwt_secret',
     },
     (jwtPayload, callback) => {
       return Users.findById(jwtPayload._id)
