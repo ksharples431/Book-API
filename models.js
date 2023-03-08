@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'),
+  bcrypt = require('bcrypt');
 
 let bookSchema = mongoose.Schema({
   Title: { type: String, required: true },
@@ -25,6 +26,14 @@ let userSchema = mongoose.Schema({
   Birthday: Date,
   Favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }],
 });
+
+userSchema.statics.hashPassword = (password) => {
+  return bcrypt.hashSync(password, 10);
+};
+
+userSchema.methods.validatePassword = function (password) {
+  return bcrypt.compareSync(password, this.Password);
+};
 
 let Book = mongoose.model('Book', bookSchema);
 let User = mongoose.model('User', userSchema);
