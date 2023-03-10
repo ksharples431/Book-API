@@ -186,3 +186,4 @@
 ::1 - - [08/Mar/2023:20:24:21 +0000] "PUT /users/ksharples431 HTTP/1.1" 401 - "-" "PostmanRuntime/7.31.0"
 ::1 - - [08/Mar/2023:20:27:16 +0000] "PUT /users/ksharples431 HTTP/1.1" 422 90 "-" "PostmanRuntime/7.31.0"
 ::1 - - [08/Mar/2023:20:27:50 +0000] "PUT /users/ksharples431 HTTP/1.1" 200 186 "-" "PostmanRuntime/7.31.0"
+127.0.0.1 - - [09/Mar/2023:21:37:27 +0000] "POST /users HTTP/1.1" 201 186 "-" "PostmanRuntime/7.31.0"

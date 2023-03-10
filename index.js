@@ -1,10 +1,11 @@
 const bodyParser = require('body-parser'),
-  express = require('express'),
-  morgan = require('morgan'),
   fs = require('fs'),
   path = require('path'),
-  uuid = require('uuid'),
+  express = require('express'),
   mongoose = require('mongoose'),
+  morgan = require('morgan'),
+  cors = require('cors'),
+  dotenv = require('dotenv'),
   Models = require('./models.js');
 
 const { check, validationResult } = require('express-validator');
@@ -15,6 +16,9 @@ const Users = Models.User;
 // Initialize express
 const app = express();
 
+// Enviroment variables
+dotenv.config();
+
 // Body parser
 app.use(bodyParser.json());
 app.use(
@@ -24,22 +28,24 @@ app.use(
 );
 
 // Cors middleware
-const cors = require('cors');
-let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) === -1) {
-        let message =
-          `The CORS policy for this application doesn’t allow access from origin ` +
-          origin;
-        return callback(new Error(message), false);
-      }
-      return callback(null, true);
-    },
-  })
-);
+// let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+// app.use(
+//   cors({
+//     origin: (origin, callback) => {
+//       if (!origin) return callback(null, true);
+//       if (allowedOrigins.indexOf(origin) === -1) {
+//         let message =
+//           `The CORS policy for this application doesn’t allow access from origin ` +
+//           origin;
+//         return callback(new Error(message), false);
+//       }
+//       return callback(null, true);
+//     },
+//   })
+// );
+
+// Allow all origins
+app.use(cors());
 
 // Auth
 let auth = require('./auth')(app);
@@ -234,8 +240,8 @@ app.put(
       },
       { new: true }
     )
-      .then((user) => {
-        res.status(200).json(user);
+      .then((updatedUser) => {
+        res.status(200).json(updatedUser);
       })
       .catch((err) => {
         console.error(err);
