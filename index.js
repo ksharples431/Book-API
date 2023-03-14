@@ -77,7 +77,6 @@ mongoose.set('strictQuery', false);
 // Get all books
 app.get(
   '/books',
-  passport.authenticate('jwt', { session: false }),
   (req, res) => {
     Books.find()
       .then((books) => {
