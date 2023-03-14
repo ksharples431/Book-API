@@ -2,21 +2,17 @@ const mongoose = require('mongoose'),
   bcrypt = require('bcrypt');
 
 let bookSchema = mongoose.Schema({
-  Title: { type: String, required: true },
-  Description: { type: String, required: true },
-  Series: { type: String, required: true },
-  SeriesNumber: { type: Number, required: true },
-  Genre: {
-    Name: String,
-    Description: String,
-  },
-  Author: {
-    Name: String,
-    Bio: String,
-  },
-  ImagePath: String,
-  haveRead: Boolean,
+  image: String,
+  title: { type: String, required: true },
+  author: { type: String, required: true },
+  genre: String,
+  series: String,
+  number: Number,
+  description: String,
   owned: Boolean,
+  // availability: Array,
+  read: Boolean,
+  favorite: Boolean
 });
 
 let userSchema = mongoose.Schema({
