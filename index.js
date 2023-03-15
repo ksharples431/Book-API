@@ -75,6 +75,7 @@ mongoose.set('strictQuery', false);
 
 // API endpoints
 // Get all books
+
 app.get(
   '/books',
   passport.authenticate('jwt', { session: false }),
@@ -193,6 +194,54 @@ app.post(
           })
             .then((user) => {
               res.status(201).json(user);
+            })
+            .catch((error) => {
+              console.error(error);
+              res.status(500).send('Error: ' + error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + error);
+      });
+  }
+);
+
+// Add new book
+app.post(
+  '/books',
+  [
+    check('title', 'Title is required'),
+    check('author', 'Author is required'),
+  ],
+  (req, res) => {
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    Books.findOne({ title: req.body.title })
+      .then((book) => {
+        if (book) {
+          return res.status(400).send(req.body.title + 'already exists');
+        } else {
+          Books.create({
+            image: req.body.image,
+            title: req.body.title,
+            author: req.body.author,
+            genre: req.body.genre,
+            series: req.body.series,
+            number: req.body.number,
+            description: req.body.description,
+            owned: req.body.owned,
+            // availability: req.body.availibility,
+            read: req.body.read,
+            favorite: req.body.favorite,
+          })
+            .then((book) => {
+              res.status(201).json(book);
             })
             .catch((error) => {
               console.error(error);
