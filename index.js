@@ -75,16 +75,21 @@ mongoose.set('strictQuery', false);
 
 // API endpoints
 // Get all books
-app.get('/books', (req, res) => {
-  Books.find()
-    .then((books) => {
-      res.json(books);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send('Error: ' + err);
-    });
-});
+
+app.get(
+  '/books',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Books.find()
+      .then((books) => {
+        res.json(books);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).send('Error: ' + err);
+      });
+  }
+);
 
 // Get book by title
 app.get(
