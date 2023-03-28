@@ -91,6 +91,21 @@ app.get(
   }
 );
 
+app.get(
+  '/authors',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Books.find().sort({"author": 1})
+      .then((books) => {
+        res.json(books);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).send('Error: ' + err);
+      });
+  }
+);
+
 // Get book by title
 app.get(
   '/books/:Title',
