@@ -91,34 +91,34 @@ app.get(
   }
 );
 
-app.get(
-  '/authors',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    Books.find().sort({"author": 1})
-      .then((books) => {
-        res.json(books);
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(500).send('Error: ' + err);
-      });
-  }
-);
+// app.get(
+//   '/authors',
+//   passport.authenticate('jwt', { session: false }),
+//   (req, res) => {
+//     Books.find().sort({"author": 1})
+//       .then((books) => {
+//         res.json(books);
+//       })
+//       .catch((err) => {
+//         console.log(err);
+//         res.status(500).send('Error: ' + err);
+//       });
+//   }
+// );
 
 // Get book by title
 app.get(
-  '/books/:Title',
+  '/books/:title',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Books.findOne({ Title: req.params.Title })
+    Books.findOne({ title: req.params.title })
       .then((book) => {
         if (book) {
           res.status(200).json(book);
         } else {
           return res
             .status(400)
-            .send(req.params.Title + " doesn't exist in the database");
+            .send(req.params.title + " doesn't exist in the database");
         }
       })
       .catch((err) => {
@@ -129,62 +129,62 @@ app.get(
 );
 
 // Get author by name
-app.get(
-  '/books/authors/:authorName',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    Books.findOne({ 'Author.Name': req.params.authorName })
-      .then((book) => {
-        if (book) {
-          res.status(200).json(book.Author);
-        } else {
-          return res
-            .status(400)
-            .send(
-              req.params.authorName + " doesn't exist in the database"
-            );
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      });
-  }
-);
+// app.get(
+//   '/books/authors/:authorName',
+//   passport.authenticate('jwt', { session: false }),
+//   (req, res) => {
+//     Books.findOne({ 'Author.Name': req.params.authorName })
+//       .then((book) => {
+//         if (book) {
+//           res.status(200).json(book.Author);
+//         } else {
+//           return res
+//             .status(400)
+//             .send(
+//               req.params.authorName + " doesn't exist in the database"
+//             );
+//         }
+//       })
+//       .catch((err) => {
+//         console.error(err);
+//         res.status(500).send('Error: ' + err);
+//       });
+//   }
+// );
 
 // Get genre by name
-app.get(
-  '/books/genres/:genreName',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    Books.findOne({ 'Genre.Name': req.params.genreName })
-      .then((book) => {
-        if (book) {
-          res.status(200).json(book.Genre);
-        } else {
-          return res
-            .status(400)
-            .send(req.params.genreName + " doesn't exist in the database");
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      });
-  }
-);
+// app.get(
+//   '/books/genres/:genreName',
+//   passport.authenticate('jwt', { session: false }),
+//   (req, res) => {
+//     Books.findOne({ 'Genre.Name': req.params.genreName })
+//       .then((book) => {
+//         if (book) {
+//           res.status(200).json(book.Genre);
+//         } else {
+//           return res
+//             .status(400)
+//             .send(req.params.genreName + " doesn't exist in the database");
+//         }
+//       })
+//       .catch((err) => {
+//         console.error(err);
+//         res.status(500).send('Error: ' + err);
+//       });
+//   }
+// );
 
 // Create new user
 app.post(
   '/users',
   [
-    check('Username', 'Username is required').isLength({ min: 5 }),
+    check('username', 'Username is required').isLength({ min: 5 }),
     check(
-      'Username',
+      'username',
       'Username contains non alphanumeric characters - not allowed.'
     ).isAlphanumeric(),
-    check('Password', 'Password is required').not().isEmpty(),
-    check('Email', 'Email does not appear to be valid').isEmail(),
+    check('password', 'Password is required').not().isEmpty(),
+    check('email', 'Email does not appear to be valid').isEmail(),
   ],
   (req, res) => {
     let errors = validationResult(req);
@@ -193,19 +193,19 @@ app.post(
       return res.status(422).json({ errors: errors.array() });
     }
 
-    let hashedPassword = Users.hashPassword(req.body.Password);
-    Users.findOne({ Username: req.body.Username })
+    let hashedPassword = Users.hashPassword(req.body.password);
+    Users.findOne({ username: req.body.username })
       .then((user) => {
         if (user) {
           return res
             .status(400)
-            .send(req.body.Username + 'already exists');
+            .send(req.body.username + 'already exists');
         } else {
           Users.create({
-            Username: req.body.Username,
-            Password: hashedPassword,
-            Email: req.body.Email,
-            Birthday: req.body.Birthday,
+            username: req.body.username,
+            password: hashedPassword,
+            email: req.body.email,
+            birthday: req.body.birthday,
           })
             .then((user) => {
               res.status(201).json(user);
@@ -250,9 +250,6 @@ app.post(
             series: req.body.series,
             number: req.body.number,
             description: req.body.description,
-            owned: req.body.owned,
-            // availability: req.body.availibility,
-            read: req.body.read,
             favorite: req.body.favorite,
           })
             .then((book) => {
@@ -273,15 +270,15 @@ app.post(
 
 // Update user info by username
 app.put(
-  '/users/:Username',
+  '/users/:username',
   [
-    check('Username', 'Username is required').isLength({ min: 5 }),
+    check('username', 'Username is required').isLength({ min: 5 }),
     check(
-      'Username',
+      'username',
       'Username contains non alphanumeric characters - not allowed.'
     ).isAlphanumeric(),
-    check('Password', 'Password is required').not().isEmpty(),
-    check('Email', 'Email does not appear to be valid').isEmail(),
+    check('password', 'Password is required').not().isEmpty(),
+    check('email', 'Email does not appear to be valid').isEmail(),
   ],
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
@@ -291,15 +288,15 @@ app.put(
       return res.status(422).json({ errors: errors.array() });
     }
 
-    let hashedPassword = Users.hashPassword(req.body.Password);
+    let hashedPassword = Users.hashPassword(req.body.password);
     Users.findOneAndUpdate(
-      { Username: req.params.Username },
+      { username: req.params.username },
       {
         $set: {
-          Username: req.body.Username,
-          Password: hashedPassword,
-          Email: req.body.Email,
-          Birthday: req.body.Birthday,
+          username: req.body.username,
+          password: hashedPassword,
+          email: req.body.email,
+          birthday: req.body.birthday,
         },
       },
       { new: true }
@@ -316,13 +313,13 @@ app.put(
 
 // Post new book to favorites
 app.post(
-  '/users/:Username/books/:BookID',
+  '/users/:username/books/:bookId',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     Users.findOneAndUpdate(
-      { Username: req.params.Username },
+      { Username: req.params.username },
       {
-        $push: { Favorites: req.params.BookID },
+        $push: { favorites: req.params.bookId },
       },
       { new: true }
     )
@@ -338,12 +335,12 @@ app.post(
 
 // Delete user's book from favorites list
 app.delete(
-  '/users/:Username/books/:BookID',
+  '/users/:username/books/:bookId',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     Users.findOneAndUpdate(
-      { Username: req.params.Username },
-      { $pull: { Favorites: req.params.BookID } },
+      { username: req.params.username },
+      { $pull: { favorites: req.params.bookId } },
       { new: true }
     )
       .then((updatedUser) => {
@@ -358,10 +355,10 @@ app.delete(
 
 // Delete user by username
 app.delete(
-  '/users/:Username',
+  '/users/:username',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Users.findOneAndRemove({ Username: req.params.Username })
+    Users.findOneAndRemove({ username: req.params.username })
       .then((user) => {
         if (!user) {
           res.status(400).send(req.params.Username + ' was not found');
@@ -394,10 +391,10 @@ app.get(
 
 // Get user by username
 app.get(
-  '/users/:Username',
+  '/users/:username',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Users.findOne({ Username: req.params.Username })
+    Users.findOne({ username: req.params.username })
       .then((user) => {
         res.status(200).json(user);
       })
