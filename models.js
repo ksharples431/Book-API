@@ -10,17 +10,16 @@ let bookSchema = mongoose.Schema({
   number: Number,
   description: String,
   owned: Boolean,
-  // availability: Array,
   read: Boolean,
   favorite: Boolean
 });
 
 let userSchema = mongoose.Schema({
-  Username: { type: String, required: true },
-  Password: { type: String, required: true },
-  Email: { type: String, required: true },
-  Birthday: Date,
-  Favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }],
+  username: { type: String, required: true },
+  password: { type: String, required: true },
+  email: { type: String, required: true },
+  birthday: Date,
+  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }],
 });
 
 userSchema.statics.hashPassword = (password) => {
